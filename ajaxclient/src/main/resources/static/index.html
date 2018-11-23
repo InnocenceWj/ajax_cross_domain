@@ -25,15 +25,23 @@
     //每个测试用例超时时间
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
     //请求接口的前缀
-    var base = "http://localhost:8080/test";
+    var base = "http://wj.com/test";
     //测试模块
     describe('wj测试ajax跨域问题', function () {
         //    测试方法1
         it('getResult XHR', function (done) {
             var result;
-            $.ajax(base + "/getResult", function (data) {
-                result = data;
-            })
+            // $.getJSON(base + "/getResult", function (data) {
+            //     result = data;
+            // });
+            $.ajax(
+                {
+                    url: base + "/getResult",
+                    type: "get",
+                    success: function (data) {
+                        result = data;
+                    }
+                });
 
             //    由于是异步请求，需要使用setTimeout来检验
             setTimeout(function () {
@@ -66,6 +74,79 @@
         //         done();
         //     }, 100);
         // });
+
+        //测试方法3
+        it("postJson", function (done) {
+            var result;//保存返回结果
+            $.ajax({
+                type: "post",//请求类型
+                url: base + "/postJson",
+                contentType: "application/json;charset=UTF-8",//请求内容类型
+                data: JSON.stringify({name: "wj"}),//数据JOSN.stringify
+                // cache: true,//结果可被缓存
+                success: function (json) {
+                    result = json;
+                }
+            });
+
+            setTimeout(function () {
+                expect(result).toEqual({
+                    "data": "post:wj"//预期结果
+                });
+                done()//完成校验
+            }, 100);
+        });
+
+        //测试方法4
+        it("testCookie请求", function (done) {
+            var result;//保存返回结果
+            $.ajax({
+                type: "get",//请求类型
+                url: base + "/getCookie",
+                //发送请求时，会带cookie
+                xhrFields:{
+                    withCredentials:true
+                },
+                // cache: true,//结果可被缓存
+                success: function (json) {
+                    result = json;
+                }
+            });
+
+            setTimeout(function () {
+                expect(result).toEqual({
+                    "data": "getCookie:wj"//预期结果
+                });
+                done()//完成校验
+            }, 100);
+        });
+
+        //测试方法5
+        it("getHeader请求", function (done) {
+            var result;//保存返回结果
+            $.ajax({
+                type: "get",//请求类型
+                url: base + "/getHeader",
+                //下面是两种自定义头的方式
+                headers:{
+                    "x-header1":"wj"
+                },
+                beforeSend:function (xhr) {
+                    xhr.setRequestHeader("x-header2","xgy")
+                },
+                success: function (json) {
+                    result = json;
+                }
+            });
+
+            setTimeout(function () {
+                expect(result).toEqual({
+                    "data": "getHeader:wj xgy"//预期结果
+                });
+                done()//完成校验
+            }, 100);
+        });
+
     });
 
 </script>
