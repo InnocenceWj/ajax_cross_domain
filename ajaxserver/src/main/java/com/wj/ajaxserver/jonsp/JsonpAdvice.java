@@ -6,7 +6,7 @@ import org.springframework.web.servlet.mvc.method.annotation.AbstractJsonpRespon
 /**
  * @创建人 wj
  * @创建时间 2018/11/22
- * @描述
+ * @描述 用于测试jsonp请求类型的请求
  */
 @ControllerAdvice
 public class JsonpAdvice extends AbstractJsonpResponseBodyAdvice {
