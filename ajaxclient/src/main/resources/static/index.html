@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="jquery.min.js"></script>
+    <!--别忘了导入css，否则没渲染哦-->
+    <link rel="stylesheet" type="text/css" href="jasmine-3.3.0/jasmine.css">
+    <!--这三个文件有顺序问题，先导入jasmine.js -- jasmine-html.js -- boot.js -->
+    <script src="jasmine-3.3.0/jasmine.js"></script>
+    <script src="jasmine-3.3.0/jasmine-html.js"></script>
+    <script src="jasmine-3.3.0/boot.js"></script>
+</head>
+<body>
+<a href="#" onclick="getResult()">发送请求</a>
+</body>
+<script>
+    function getResult() {
+        $.ajax("http://localhost:8080/test/getResult", function (result) {
+            alert(result)
+        })
+    }
+
+    //js测试代码
+    //每个测试用例超时时间
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
+    //请求接口的前缀
+    var base = "http://localhost:8080/test";
+    //测试模块
+    describe('wj测试ajax跨域问题', function () {
+        //    测试方法1
+        it('getResult XHR', function (done) {
+            var result;
+            $.ajax(base + "/getResult", function (data) {
+                result = data;
+            })
+
+            //    由于是异步请求，需要使用setTimeout来检验
+            setTimeout(function () {
+                expect(result).toEqual({
+                    "data": "success"
+                });
+                //    校验完成，通知jasmine框架
+                done();
+            }, 100);
+        });
+
+        //    测试方法2
+        it('getResult jsonp', function (done) {
+            var result;
+            $.ajax({
+                url: base + "/getResult",
+                dataType: "jsonp",
+                callback:"callback1",
+                success: function (data) {
+                    result = data;
+                }
+            });
+
+            //    由于是异步请求，需要使用setTimeout来检验
+            setTimeout(function () {
+                expect(result).toEqual({
+                    "data": "success"
+                });
+                //    校验完成，通知jasmine框架
+                done();
+            }, 100);
+        });
+    });
+
+</script>
+</html>
