@@ -46,26 +46,26 @@
         });
 
         //    测试方法2
-        it('getResult jsonp', function (done) {
-            var result;
-            $.ajax({
-                url: base + "/getResult",
-                dataType: "jsonp",
-                callback:"callback1",
-                success: function (data) {
-                    result = data;
-                }
-            });
-
-            //    由于是异步请求，需要使用setTimeout来检验
-            setTimeout(function () {
-                expect(result).toEqual({
-                    "data": "success"
-                });
-                //    校验完成，通知jasmine框架
-                done();
-            }, 100);
-        });
+        // it('getResult jsonp', function (done) {
+        //     var result;
+        //     $.ajax({
+        //         url: base + "/getResult",
+        //         dataType: "jsonp",
+        //         callback:"callback1",
+        //         success: function (data) {
+        //             result = data;
+        //         }
+        //     });
+        //
+        //     //    由于是异步请求，需要使用setTimeout来检验
+        //     setTimeout(function () {
+        //         expect(result).toEqual({
+        //             "data": "success"
+        //         });
+        //         //    校验完成，通知jasmine框架
+        //         done();
+        //     }, 100);
+        // });
     });
 
 </script>
